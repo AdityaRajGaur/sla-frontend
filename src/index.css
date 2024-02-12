@@ -1,0 +1,29 @@
+body,html {
+  margin: 0;
+  height: 100%; /* Ensure the full height is available */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.input-label {
+  float:left;
+  text-align: left; /* Align label text to the left */
+  margin-bottom: 5px; /* Space between label and input field */
+}
+/* Reset the default styles of input[type="date"] to ensure consistency */
+.form-group input[type="date"] {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 4px;
+}
+.input-label, .form-group input, .form-group input[type="date"] {
+  width: 100%; /* Ensure labels and input fields fill their containers */
+}

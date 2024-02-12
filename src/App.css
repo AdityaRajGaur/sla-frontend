@@ -1,0 +1,84 @@
+/* App.css */
+.App {
+  text-align: center;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4; /* Light grey background */
+}
+
+.App-header {
+  background-color: #282c34; /* Dark header background */
+  padding: 20px;
+  color: white;
+}
+
+.App-logo {
+  height: 80px;
+  margin-bottom: 20px;
+}
+
+h1 {
+  color: #61dafb; /* React blue for the title */
+}
+
+.sla-form {
+  max-width: 500px;
+  margin: auto;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+input[type="file"],
+input[type="number"],
+input[type="date"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box; /* Makes sure the input width includes padding */
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 10px 20px;
+  background-color: #007bff; /* Bootstrap blue for the button */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px; /* Space between the file input and the button */
+}
+
+.submit-btn:disabled {
+  background-color: #aaa;
+}
+
+.result {
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid #007bff;
+  color: #007bff;
+  border-radius: 5px;
+}
+
+/* Add some padding at the bottom of the page */
+body, html {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.App {
+  flex: 1;
+}
