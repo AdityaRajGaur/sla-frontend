@@ -11,8 +11,8 @@ function App() {
   const [resolutionSLA, setResolutionSLA] = useState({
     KPI: 'Resolution SLA Compliance',
     Target: 0, // Default target percentage
-    CurrentStatus: '0.0%',
-    CriteriaMet: 'No'
+    CurrentStatus: '',
+    CriteriaMet: ''
   });
 
   //Function to fetch SLA response compliance
@@ -87,8 +87,8 @@ function App() {
   const [responseSLA, setResponseSLA] = useState({
     KPI: 'Response SLA Compliance',
     Target: 0, // Default target percentage for response SLA
-    CurrentStatus: '0.0%',
-    CriteriaMet: 'No'
+    CurrentStatus: '',
+    CriteriaMet: ''
   });
 
   const handleResponseThresholdChange = (event) => {
@@ -190,7 +190,7 @@ function App() {
                 </button>
               </td>
               <td>{resolutionSLA.CurrentStatus}</td>
-              <td>{resolutionSLA.CriteriaMet}</td>
+              <td className={resolutionSLA.CriteriaMet === 'Yes' ? 'yes' : 'no' }>{resolutionSLA.CriteriaMet}</td>
             </tr>
             <tr>
               <td>{responseSLA.KPI}</td>
@@ -210,7 +210,7 @@ function App() {
                 </button>
               </td>
               <td>{responseSLA.CurrentStatus}</td>
-              <td>{responseSLA.CriteriaMet}</td>
+              <td className={responseSLA.CriteriaMet === 'Yes' ? 'yes' : 'no' }>{responseSLA.CriteriaMet}</td>
             </tr>
           </tbody>
         </table>

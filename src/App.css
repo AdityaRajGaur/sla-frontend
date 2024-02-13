@@ -65,6 +65,16 @@ select {
   margin-left: 10%;;
 }
 
+.yes {
+  color: green;
+  font-weight: bold;
+}
+
+.no {
+  color:red;
+  font-weight: bold;
+}
+
 .submit-btn {
   width: 100%;
   padding: 10px 20px;
