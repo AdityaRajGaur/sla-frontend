@@ -10,17 +10,18 @@ function App() {
   const [customEndDate, setCustomEndDate] = useState('');
   const [resolutionSLA, setResolutionSLA] = useState({
     KPI: 'Resolution SLA Compliance',
-    Target: 90, // Default target percentage
+    Target: 0, // Default target percentage
     CurrentStatus: '0.0%',
     CriteriaMet: 'No'
   });
-
+  const [checkResolution, setCheckResolution] = useState(false);
+  const [checkResponse, setCheckResponse] = useState(false);
 //Function to fetch SLA response compliance
 const fetchResponseSLACompliance = () => {
   // Validation if needed
   if (isNaN(responseSLA.Target)) {
     alert('Please enter a valid threshold percentage for Response SLA.');
-    return;
+    
   }
 
   setLoading(true);
@@ -29,6 +30,7 @@ const fetchResponseSLACompliance = () => {
     threshold: responseSLA.Target,
     start_date: customStartDate,
     end_date: customEndDate,
+    durationType: durationType
   })
   .then(response => {
     setLoading(false);
@@ -45,20 +47,21 @@ const fetchResponseSLACompliance = () => {
     });
   };
 
-
+  
   // Function to fetch SLA Compliance
-  const fetchSLACompliance = (startDate, endDate, target) => {
+  const fetchSLACompliance = (startDate, endDate, target, durationType) => {
     // Only proceed if target is a number
     if (isNaN(target)) {
       alert('Please enter a valid threshold percentage.');
       return;
     }
-
+    //TODO keep the url in a config file
     setLoading(true);
     axios.post('http://localhost:8000/api/check-threshold', {
       threshold: target,
       start_date: startDate,
       end_date: endDate,
+      durationType: durationType
     })
     .then(response => {
       setLoading(false);
@@ -84,7 +87,7 @@ const fetchResponseSLACompliance = () => {
 
   const [responseSLA, setResponseSLA] = useState({
     KPI: 'Response SLA Compliance',
-    Target: 90, // Default target percentage for response SLA
+    Target: 0, // Default target percentage for response SLA
     CurrentStatus: '0.0%',
     CriteriaMet: 'No'
   });
@@ -104,21 +107,18 @@ const fetchResponseSLACompliance = () => {
   };
 
 
-  const handleKeyDown = (event) => {
-    console.log("line 63")
-    // Check if the Enter key was pressed
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      handleSubmit(event);
-    }
-  };
+
   const handleDurationChange = (event) => {
-    setDurationType(event.target.value);
+    setDurationType(event.target.value); // Get the selected duration type
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (event, type) => {
     event.preventDefault();
-    fetchSLACompliance(customStartDate, customEndDate, resolutionSLA.Target);
+    if (type === 'resolution' && checkResolution) {
+      fetchSLACompliance(customStartDate, customEndDate, resolutionSLA.Target, durationType);
+    } else if (type === 'response' && checkResponse) {
+      fetchResponseSLACompliance(customStartDate, customEndDate, responseSLA.Target, durationType);
+    }
   };
 
   return (
@@ -128,18 +128,7 @@ const fetchResponseSLACompliance = () => {
         <h1>SLA Validator</h1>
       </header>
       <form onSubmit={handleSubmit} className="sla-form">
-        <div className="form-group">
-          <label htmlFor="target" className="input-label">Valid Threshold Percentage</label>
-          <input
-            type="number"
-            id="target"
-            name="target"
-            value={resolutionSLA.Target}
-            onChange={handleThresholdChange}
-            onKeyDown={handleKeyDown} // Use onKeyDown instead of onKeyPress
-             required
-          />
-        </div>
+       
         <div className="form-group">
           <label htmlFor="duration" className="input-label">Duration</label>
           <select id="duration" name="duration" value={durationType} onChange={handleDurationChange}>
@@ -168,30 +157,13 @@ const fetchResponseSLACompliance = () => {
               required
             />
           </div>
-        )}
-        <button type="submit" disabled={loading} className="submit-btn">
-          {loading ? 'Checking...' : 'Check Threshold'}
-        </button>
-        <div className="form-group">
-        <label htmlFor="response-target" className="input-label">Response SLA Valid Threshold Percentage</label>
-        <input
-          type="number"
-          id="response-target"
-          name="response-target"
-          value={responseSLA.Target}
-          onChange={handleResponseThresholdChange}
-          required
-        />
-      </div>
-      <button onClick={fetchResponseSLACompliance} disabled={loading}>
-        {loading ? 'Checking...' : 'Check Response SLA'}
-      </button>
-      </form>
+        )}      
       <table>
         <thead>
           <tr>
             <th>KPI</th>
             <th>Target (%)</th>
+            <th>Check Threshold</th>
             <th>Current Status</th>
             <th>Criteria met?</th>
           </tr>
@@ -206,6 +178,19 @@ const fetchResponseSLACompliance = () => {
                 onChange={handleThresholdChange}
               />
             </td>
+            <td>
+                <input
+                  type="checkbox"
+                  checked={checkResolution}
+                  onChange={(e) => setCheckResolution(e.target.checked)}
+                />
+                <button
+                  onClick={(e) => handleSubmit(e, 'resolution')}
+                  disabled={loading || !checkResolution}
+                >
+                  Check Threshold
+                </button>
+              </td>
             <td>{resolutionSLA.CurrentStatus}</td>
             <td>{resolutionSLA.CriteriaMet}</td>
           </tr>
@@ -218,12 +203,25 @@ const fetchResponseSLACompliance = () => {
                 onChange={handleResponseThresholdChange}
               />
             </td>
+            <td>
+                <input
+                  type="checkbox"
+                  checked={checkResponse}
+                  onChange={(e) => setCheckResponse(e.target.checked)}
+                />
+                <button
+                  onClick={(e) => handleSubmit(e, 'response')}
+                  disabled={loading || !checkResponse}
+                >
+                  Check Threshold
+                </button>
+              </td>
             <td>{responseSLA.CurrentStatus}</td>
             <td>{responseSLA.CriteriaMet}</td>
           </tr>
         </tbody>
       </table>
-
+      </form>
       {/* {thresholdBreached && <div className="result">{thresholdBreached}</div>} */}
     </div>
   );
