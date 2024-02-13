@@ -127,7 +127,7 @@ function App() {
       </header>
       <form onSubmit={handleSubmit} className="sla-form">
 
-        <div className="form-group">
+        <div className="form-group duration">
           <label htmlFor="duration" className="input-label">Duration</label>
           <select id="duration" name="duration" value={durationType} onChange={handleDurationChange}>
             <option value="current_month">Current Month</option>
@@ -135,8 +135,8 @@ function App() {
           </select>
         </div>
         {durationType === 'custom_date_range' && (
-          <div className="form-group dates">
-            <div className="date-input-container">
+          <div className="custom-date">
+            <div className="form-group">
               <label htmlFor="custom_start_date" className="input-label">Start Date</label>
               <input
                 type="date"
@@ -147,7 +147,7 @@ function App() {
                 required
               />
             </div>
-            <div className="date-input-container">
+            <div className="form-group custom-end-date">
               <label htmlFor="custom_end_date" className="input-label">End Date</label>
               <input
                 type="date"

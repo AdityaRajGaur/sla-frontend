@@ -30,13 +30,6 @@ h1 {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* App.css */
-.form-group.dates {
-  display: flex;
-  justify-content: space-between; /* Adjust the space as needed */
-  align-items: center; /* Align items vertically */
-}
-
 .form-group.dates label,
 .form-group.dates input {
   margin-right: 10px; /* Adjust the space between labels and inputs */
@@ -45,17 +38,31 @@ h1 {
 
 .form-group {
   margin-bottom: 15px;
+  float: left;
 }
 
 input[type="file"],
 input[type="number"],
-input[type="date"] {
-  width: 100%;
+input[type="date"],
+select {
+  float: left;
   padding: 10px;
   margin-top: 5px;
   border: 1px solid #ddd;
   border-radius: 5px;
   box-sizing: border-box; /* Makes sure the input width includes padding */
+}
+
+.duration {
+  width: 20%;
+}
+
+.custom-date {
+  width: 60%;
+}
+
+.custom-end-date {
+  margin-left: 10%;;
 }
 
 .submit-btn {
