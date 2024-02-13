@@ -4,7 +4,7 @@ import axios from 'axios';
 import logo from './sla-validator-logo.png';
 
 function App() {
-  const [loading, setLoading] = useState(false);
+  //const [loading, setLoading] = useState(false);
   const [durationType, setDurationType] = useState('current_month');
   const [customStartDate, setCustomStartDate] = useState('');
   const [customEndDate, setCustomEndDate] = useState('');
@@ -14,6 +14,8 @@ function App() {
     CurrentStatus: '',
     CriteriaMet: ''
   });
+  const [resolutionLoading, setResolutionLoading] = useState(false);
+  const [responseLoading, setResponseLoading] = useState(false);
 
   //Function to fetch SLA response compliance
   const fetchResponseSLACompliance = () => {
@@ -23,7 +25,8 @@ function App() {
 
     }
 
-    setLoading(true);
+    //setLoading(true);
+    setResponseLoading(true);
     // Assuming your backend can handle this endpoint
     axios.post('http://localhost:8000/api/check-threshold', {
       threshold: responseSLA.Target,
@@ -32,7 +35,8 @@ function App() {
       durationType: durationType
     })
       .then(response => {
-        setLoading(false);
+        //setLoading(false);
+        setResponseLoading(false);
         console.log(response)
         setResponseSLA(prevState => ({
           ...prevState,
@@ -41,7 +45,8 @@ function App() {
         }));
       })
       .catch(error => {
-        setLoading(false);
+        //setLoading(false);
+        setResponseLoading(false);
         console.error('Error:', error);
       });
   };
@@ -55,7 +60,8 @@ function App() {
       return;
     }
     //TODO keep the url in a config file
-    setLoading(true);
+    //setLoading(true);
+    setResolutionLoading(true);
     axios.post('http://localhost:8000/api/check-threshold', {
       threshold: target,
       start_date: startDate,
@@ -63,14 +69,16 @@ function App() {
       durationType: durationType
     })
       .then(response => {
-        setLoading(false);
+        // setLoading(false);
+        setResolutionLoading(false);
         setResolutionSLA(prevState => ({
           ...prevState,
           CurrentStatus: response.data.resolution_sla_compliance['Current Status'],
           CriteriaMet: response.data.resolution_sla_compliance['Criteria met']
         }));
       }).catch(error => {
-        setLoading(false);
+        //setLoading(false);
+        setResolutionLoading(false);
         console.error('Error:', error);
       });
   };
@@ -182,15 +190,19 @@ function App() {
                 />
               </td>
               <td>
-                <button variant="contained"
-                  onClick={(e) => handleSubmit(e, 'resolution')}
-                  disabled={loading}
-                >
-                  Compute
+                <button variant="contained" onClick={(e) => handleSubmit(e, 'resolution')} disabled={resolutionLoading}>
+                  {resolutionLoading ? (
+                    <>
+                      <span className="spinner"></span> {/* Spinner icon */}
+                      Loading...
+                    </>
+                  ) : (
+                    'Compute'
+                  )}
                 </button>
               </td>
               <td>{resolutionSLA.CurrentStatus}</td>
-              <td className={resolutionSLA.CriteriaMet === 'Yes' ? 'yes' : 'no' }>{resolutionSLA.CriteriaMet}</td>
+              <td className={resolutionSLA.CriteriaMet === 'Yes' ? 'yes' : 'no'}>{resolutionSLA.CriteriaMet}</td>
             </tr>
             <tr>
               <td>{responseSLA.KPI}</td>
@@ -202,15 +214,19 @@ function App() {
                 />
               </td>
               <td>
-                <button variant="contained"
-                  onClick={(e) => handleSubmit(e, 'response')}
-                  disabled={loading}
-                >
-                  Compute
+              <button variant="contained" onClick={(e) => handleSubmit(e, 'response')} disabled={responseLoading}>
+                  {responseLoading ? (
+                    <>
+                      <span className="spinner"></span> {/* Spinner icon */}
+                      Loading...
+                    </>
+                  ) : (
+                    'Compute'
+                  )}
                 </button>
               </td>
               <td>{responseSLA.CurrentStatus}</td>
-              <td className={responseSLA.CriteriaMet === 'Yes' ? 'yes' : 'no' }>{responseSLA.CriteriaMet}</td>
+              <td className={responseSLA.CriteriaMet === 'Yes' ? 'yes' : 'no'}>{responseSLA.CriteriaMet}</td>
             </tr>
           </tbody>
         </table>
