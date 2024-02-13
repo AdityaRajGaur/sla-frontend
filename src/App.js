@@ -14,40 +14,39 @@ function App() {
     CurrentStatus: '0.0%',
     CriteriaMet: 'No'
   });
-  const [checkResolution, setCheckResolution] = useState(false);
-  const [checkResponse, setCheckResponse] = useState(false);
-//Function to fetch SLA response compliance
-const fetchResponseSLACompliance = () => {
-  // Validation if needed
-  if (isNaN(responseSLA.Target)) {
-    alert('Please enter a valid threshold percentage for Response SLA.');
-    
-  }
 
-  setLoading(true);
-  // Assuming your backend can handle this endpoint
-  axios.post('http://localhost:8000/api/check-threshold', {
-    threshold: responseSLA.Target,
-    start_date: customStartDate,
-    end_date: customEndDate,
-    durationType: durationType
-  })
-  .then(response => {
-    setLoading(false);
-    console.log(response)
-    setResponseSLA(prevState => ({
-      ...prevState,
-      CurrentStatus: response.data.response_sla_compliance['Current Status'],
-      CriteriaMet: response.data.response_sla_compliance['Criteria met']
-    }));
-  })
-  .catch(error => {
-    setLoading(false);
-    console.error('Error:', error);
-    });
+  //Function to fetch SLA response compliance
+  const fetchResponseSLACompliance = () => {
+    // Validation if needed
+    if (isNaN(responseSLA.Target)) {
+      alert('Please enter a valid threshold percentage for Response SLA.');
+
+    }
+
+    setLoading(true);
+    // Assuming your backend can handle this endpoint
+    axios.post('http://localhost:8000/api/check-threshold', {
+      threshold: responseSLA.Target,
+      start_date: customStartDate,
+      end_date: customEndDate,
+      durationType: durationType
+    })
+      .then(response => {
+        setLoading(false);
+        console.log(response)
+        setResponseSLA(prevState => ({
+          ...prevState,
+          CurrentStatus: response.data.response_sla_compliance['Current Status'],
+          CriteriaMet: response.data.response_sla_compliance['Criteria met']
+        }));
+      })
+      .catch(error => {
+        setLoading(false);
+        console.error('Error:', error);
+      });
   };
 
-  
+
   // Function to fetch SLA Compliance
   const fetchSLACompliance = (startDate, endDate, target, durationType) => {
     // Only proceed if target is a number
@@ -63,19 +62,19 @@ const fetchResponseSLACompliance = () => {
       end_date: endDate,
       durationType: durationType
     })
-    .then(response => {
-      setLoading(false);
-      setResolutionSLA(prevState => ({
-        ...prevState,
-        CurrentStatus: response.data.resolution_sla_compliance['Current Status'],
-        CriteriaMet: response.data.resolution_sla_compliance['Criteria met']
-      }));
-    }).catch(error => {
-      setLoading(false);
-      console.error('Error:', error);
-    });
+      .then(response => {
+        setLoading(false);
+        setResolutionSLA(prevState => ({
+          ...prevState,
+          CurrentStatus: response.data.resolution_sla_compliance['Current Status'],
+          CriteriaMet: response.data.resolution_sla_compliance['Criteria met']
+        }));
+      }).catch(error => {
+        setLoading(false);
+        console.error('Error:', error);
+      });
   };
-  
+
   // Effect to set the default dates
   useEffect(() => {
     const today = new Date();
@@ -98,7 +97,7 @@ const fetchResponseSLACompliance = () => {
       Target: event.target.value === '' ? '' : parseFloat(event.target.value) || ''
     }));
   };
-  
+
   const handleThresholdChange = (event) => {
     setResolutionSLA(prevState => ({
       ...prevState,
@@ -106,17 +105,16 @@ const fetchResponseSLACompliance = () => {
     }));
   };
 
-
-
   const handleDurationChange = (event) => {
     setDurationType(event.target.value); // Get the selected duration type
   };
 
   const handleSubmit = (event, type) => {
+    console.log("line 116")
     event.preventDefault();
-    if (type === 'resolution' && checkResolution) {
+    if (type === 'resolution') {
       fetchSLACompliance(customStartDate, customEndDate, resolutionSLA.Target, durationType);
-    } else if (type === 'response' && checkResponse) {
+    } else if (type === 'response') {
       fetchResponseSLACompliance(customStartDate, customEndDate, responseSLA.Target, durationType);
     }
   };
@@ -128,7 +126,7 @@ const fetchResponseSLACompliance = () => {
         <h1>SLA Validator</h1>
       </header>
       <form onSubmit={handleSubmit} className="sla-form">
-       
+
         <div className="form-group">
           <label htmlFor="duration" className="input-label">Duration</label>
           <select id="duration" name="duration" value={durationType} onChange={handleDurationChange}>
@@ -137,90 +135,85 @@ const fetchResponseSLACompliance = () => {
           </select>
         </div>
         {durationType === 'custom_date_range' && (
-          <div className="form-group">
-            <label htmlFor="custom_start_date" className="input-label">Custom Start Date</label>
-            <input
-              type="date"
-              id="custom_start_date"
-              name="custom_start_date"
-              value={customStartDate}
-              onChange={(e) => setCustomStartDate(e.target.value)}
-              required
-            />
-            <label htmlFor="custom_end_date" className="input-label">Custom End Date</label>
-            <input
-              type="date"
-              id="custom_end_date"
-              name="custom_end_date"
-              value={customEndDate}
-              onChange={(e) => setCustomEndDate(e.target.value)}
-              required
-            />
+          <div className="form-group dates">
+            <div className="date-input-container">
+              <label htmlFor="custom_start_date" className="input-label">Start Date</label>
+              <input
+                type="date"
+                id="custom_start_date"
+                name="custom_start_date"
+                value={customStartDate}
+                onChange={(e) => setCustomStartDate(e.target.value)}
+                required
+              />
+            </div>
+            <div className="date-input-container">
+              <label htmlFor="custom_end_date" className="input-label">End Date</label>
+              <input
+                type="date"
+                id="custom_end_date"
+                name="custom_end_date"
+                value={customEndDate}
+                onChange={(e) => setCustomEndDate(e.target.value)}
+                required
+              />
+            </div>
           </div>
-        )}      
-      <table>
-        <thead>
-          <tr>
-            <th>KPI</th>
-            <th>Target (%)</th>
-            <th>Check Threshold</th>
-            <th>Current Status</th>
-            <th>Criteria met?</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{resolutionSLA.KPI}</td>
-            <td>
-              <input
-                type="number"
-                value={resolutionSLA.Target}
-                onChange={handleThresholdChange}
-              />
-            </td>
-            <td>
+        )}
+
+        <table>
+          <thead>
+            <tr>
+              <th>KPI</th>
+              <th>Target (%)</th>
+              <th>Check Threshold</th>
+              <th>Current Status</th>
+              <th>Criteria met?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{resolutionSLA.KPI}</td>
+              <td>
                 <input
-                  type="checkbox"
-                  checked={checkResolution}
-                  onChange={(e) => setCheckResolution(e.target.checked)}
+                  type="number"
+                  value={resolutionSLA.Target}
+                  onChange={handleThresholdChange}
                 />
-                <button
+              </td>
+              <td>
+                <button variant="contained"
                   onClick={(e) => handleSubmit(e, 'resolution')}
-                  disabled={loading || !checkResolution}
+                  disabled={loading}
                 >
-                  Check Threshold
+                  Compute
                 </button>
               </td>
-            <td>{resolutionSLA.CurrentStatus}</td>
-            <td>{resolutionSLA.CriteriaMet}</td>
-          </tr>
-          <tr>
-            <td>{responseSLA.KPI}</td>
-            <td>
-              <input
-                type="number"
-                value={responseSLA.Target}
-                onChange={handleResponseThresholdChange}
-              />
-            </td>
-            <td>
+              <td>{resolutionSLA.CurrentStatus}</td>
+              <td>{resolutionSLA.CriteriaMet}</td>
+            </tr>
+            <tr>
+              <td>{responseSLA.KPI}</td>
+              <td>
                 <input
-                  type="checkbox"
-                  checked={checkResponse}
-                  onChange={(e) => setCheckResponse(e.target.checked)}
+                  type="number"
+                  value={responseSLA.Target}
+                  onChange={handleResponseThresholdChange}
                 />
-                <button
+              </td>
+              <td>
+                <button variant="contained"
                   onClick={(e) => handleSubmit(e, 'response')}
-                  disabled={loading || !checkResponse}
+                  disabled={loading}
                 >
-                  Check Threshold
+                  Compute
                 </button>
               </td>
-            <td>{responseSLA.CurrentStatus}</td>
-            <td>{responseSLA.CriteriaMet}</td>
-          </tr>
-        </tbody>
-      </table>
+              <td>{responseSLA.CurrentStatus}</td>
+              <td>{responseSLA.CriteriaMet}</td>
+            </tr>
+          </tbody>
+        </table>
       </form>
       {/* {thresholdBreached && <div className="result">{thresholdBreached}</div>} */}
     </div>

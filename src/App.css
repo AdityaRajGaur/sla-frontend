@@ -22,13 +22,26 @@ h1 {
 }
 
 .sla-form {
-  max-width: 500px;
+  max-width: auto;
   margin: auto;
   background-color: #ffffff;
   padding: 30px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
+/* App.css */
+.form-group.dates {
+  display: flex;
+  justify-content: space-between; /* Adjust the space as needed */
+  align-items: center; /* Align items vertically */
+}
+
+.form-group.dates label,
+.form-group.dates input {
+  margin-right: 10px; /* Adjust the space between labels and inputs */
+}
+
 
 .form-group {
   margin-bottom: 15px;
@@ -81,4 +94,64 @@ body {
 
 .App {
   flex: 1;
+}
+
+
+
+/* Flexbox setup for form groups */
+.form-group.dates {
+  display: flex;
+  align-items: center; /* Align items vertically */
+}
+
+/* Individual date input container */
+.date-input-container {
+  display: flex;
+  flex-direction: column;
+  margin-right: 20px; /* Space between date inputs */
+}
+
+.date-input-container:last-child {
+  margin-right: 0; /* No margin for the last container */
+}
+
+/* Styles for input and label within the date input container */
+.date-input-container label,
+.date-input-container input {
+  margin-bottom: 5px; /* Space between label and input */
+}
+
+/* Remove the margin right that was set previously for all labels and inputs */
+.form-group.dates label,
+.form-group.dates input {
+  margin-right: 0;
+}
+
+/* Additional styles for the table to align with the new inputs */
+table {
+  width: 100%;
+  margin-top: 20px; /* Space between the date inputs and the table */
+  border-collapse: collapse; /* Collapse borders */
+}
+
+th, td {
+  text-align: left;
+  padding: 8px; /* Padding inside table cells */
+  border: 1px solid #ddd; /* Light grey border for cells */
+}
+
+
+/* Styles for buttons */
+button {
+  padding: 10px 20px;
+  background-color: #007bff; /* Bootstrap blue for the button */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px; /* Space between checkbox and button */
+}
+
+button:disabled {
+  background-color: #aaa; /* Grey out the button when disabled */
 }
