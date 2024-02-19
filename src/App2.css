@@ -1,0 +1,176 @@
+app.css
+/* App.css */
+.App {
+  text-align: center;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4; /* Light grey background */
+}
+
+.App-header {
+  background-color: #282c34; /* Dark header background */
+  padding: 20px;
+  color: white;
+}
+
+.App-logo {
+  height: 80px;
+  margin-bottom: 20px;
+}
+
+h1 {
+  color: #61dafb; /* React blue for the title */
+}
+
+.sla-form {
+  max-width: auto;
+  margin: auto;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-group.dates label,
+.form-group.dates input {
+  margin-right: 10px; /* Adjust the space between labels and inputs */
+}
+
+
+.form-group {
+  margin-bottom: 15px;
+  float: left;
+}
+
+input[type="file"],
+input[type="number"],
+input[type="date"],
+select {
+  float: left;
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box; /* Makes sure the input width includes padding */
+}
+
+.duration {
+  width: 20%;
+}
+
+.custom-date {
+  width: 60%;
+}
+
+.custom-end-date {
+  margin-left: 10%;;
+}
+
+.yes {
+  color: green;
+  font-weight: bold;
+}
+
+.no {
+  color:red;
+  font-weight: bold;
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 10px 20px;
+  background-color: #007bff; /* Bootstrap blue for the button */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px; /* Space between the file input and the button */
+}
+
+.submit-btn:disabled {
+  background-color: #aaa;
+}
+
+.result {
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid #007bff;
+  color: #007bff;
+  border-radius: 5px;
+}
+
+/* Add some padding at the bottom of the page */
+body, html {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.App {
+  flex: 1;
+}
+
+
+
+/* Flexbox setup for form groups */
+.form-group.dates {
+  display: flex;
+  align-items: center; /* Align items vertically */
+}
+
+/* Individual date input container */
+.date-input-container {
+  display: flex;
+  flex-direction: column;
+  margin-right: 20px; /* Space between date inputs */
+}
+
+.date-input-container:last-child {
+  margin-right: 0; /* No margin for the last container */
+}
+
+/* Styles for input and label within the date input container */
+.date-input-container label,
+.date-input-container input {
+  margin-bottom: 5px; /* Space between label and input */
+}
+
+/* Remove the margin right that was set previously for all labels and inputs */
+.form-group.dates label,
+.form-group.dates input {
+  margin-right: 0;
+}
+
+/* Additional styles for the table to align with the new inputs */
+table {
+  width: 100%;
+  margin-top: 20px; /* Space between the date inputs and the table */
+  border-collapse: collapse; /* Collapse borders */
+}
+
+th, td {
+  text-align: left;
+  padding: 8px; /* Padding inside table cells */
+  border: 1px solid #ddd; /* Light grey border for cells */
+}
+
+
+/* Styles for buttons */
+button {
+  padding: 10px 20px;
+  background-color: #007bff; /* Bootstrap blue for the button */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 10px; /* Space between checkbox and button */
+}
+
+button:disabled {
+  background-color: #aaa; /* Grey out the button when disabled */
+}
+

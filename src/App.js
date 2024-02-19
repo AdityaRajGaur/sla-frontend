@@ -1,131 +1,40 @@
-import './App.css';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import logo from './sla-validator-logo.png';
+import './App.css';
 
 function App() {
-  //const [loading, setLoading] = useState(false);
-  const [durationType, setDurationType] = useState('current_month');
-  const [customStartDate, setCustomStartDate] = useState('');
-  const [customEndDate, setCustomEndDate] = useState('');
-  const [resolutionSLA, setResolutionSLA] = useState({
-    KPI: 'Resolution SLA Compliance',
-    Target: 0, // Default target percentage
-    CurrentStatus: '',
-    CriteriaMet: ''
-  });
-  const [resolutionLoading, setResolutionLoading] = useState(false);
-  const [responseLoading, setResponseLoading] = useState(false);
+  const [monthlyData, setMonthlyData] = useState(null); // Start with null
 
-  //Function to fetch SLA response compliance
-  const fetchResponseSLACompliance = () => {
-    // Validation if needed
-    if (isNaN(responseSLA.Target)) {
-      alert('Please enter a valid threshold percentage for Response SLA.');
-
-    }
-
-    //setLoading(true);
-    setResponseLoading(true);
-    // Assuming your backend can handle this endpoint
-    axios.post('http://localhost:8000/api/check-threshold', {
-      threshold: responseSLA.Target,
-      start_date: customStartDate,
-      end_date: customEndDate,
-      durationType: durationType
-    })
-      .then(response => {
-        //setLoading(false);
-        setResponseLoading(false);
-        console.log(response)
-        setResponseSLA(prevState => ({
-          ...prevState,
-          CurrentStatus: response.data.response_sla_compliance['Current Status'],
-          CriteriaMet: response.data.response_sla_compliance['Criteria met']
-        }));
-      })
-      .catch(error => {
-        //setLoading(false);
-        setResponseLoading(false);
-        console.error('Error:', error);
-      });
-  };
-
-
-  // Function to fetch SLA Compliance
-  const fetchSLACompliance = (startDate, endDate, target, durationType) => {
-    // Only proceed if target is a number
-    if (isNaN(target)) {
-      alert('Please enter a valid threshold percentage.');
-      return;
-    }
-    //TODO keep the url in a config file
-    //setLoading(true);
-    setResolutionLoading(true);
-    axios.post('http://localhost:8000/api/check-threshold', {
-      threshold: target,
-      start_date: startDate,
-      end_date: endDate,
-      durationType: durationType
-    })
-      .then(response => {
-        // setLoading(false);
-        setResolutionLoading(false);
-        setResolutionSLA(prevState => ({
-          ...prevState,
-          CurrentStatus: response.data.resolution_sla_compliance['Current Status'],
-          CriteriaMet: response.data.resolution_sla_compliance['Criteria met']
-        }));
-      }).catch(error => {
-        //setLoading(false);
-        setResolutionLoading(false);
-        console.error('Error:', error);
-      });
-  };
-
-  // Effect to set the default dates
   useEffect(() => {
-    const today = new Date();
-    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
-    const currentDay = today.toISOString().split('T')[0];
-    setCustomStartDate(firstDayOfMonth);
-    setCustomEndDate(currentDay);
+    const fetchMonthlyData = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/get-sla-compliance/');
+        console.log('Data received:', response.data);
+        setMonthlyData(response.data);
+      } catch (error) {
+        console.error('Error fetching monthly data:', error);
+      }
+    };
+
+    fetchMonthlyData();
   }, []);
 
-  const [responseSLA, setResponseSLA] = useState({
-    KPI: 'Response SLA Compliance',
-    Target: 0, // Default target percentage for response SLA
-    CurrentStatus: '',
-    CriteriaMet: ''
-  });
-
-  const handleResponseThresholdChange = (event) => {
-    setResponseSLA(prevState => ({
-      ...prevState,
-      Target: event.target.value === '' ? '' : parseFloat(event.target.value) || ''
-    }));
+  // This function converts YYYY-MM to a more readable format, e.g., '2023-09' -> 'Sep 2023'
+  const formatMonth = (monthYear) => {
+    const [year, month] = monthYear.split('-');
+    const date = new Date(year, month - 1);
+    return date.toLocaleString('default', { month: 'short' }) + ' ' + year;
   };
 
-  const handleThresholdChange = (event) => {
-    setResolutionSLA(prevState => ({
-      ...prevState,
-      Target: event.target.value === '' ? '' : parseFloat(event.target.value) || ''
-    }));
-  };
+  // Wait for the data to be loaded before trying to access it
+  if (!monthlyData) {
+    return <p>Loading data...</p>;
+  }
 
-  const handleDurationChange = (event) => {
-    setDurationType(event.target.value); // Get the selected duration type
-  };
-
-  const handleSubmit = (event, type) => {
-    console.log("line 116")
-    event.preventDefault();
-    if (type === 'resolution') {
-      fetchSLACompliance(customStartDate, customEndDate, resolutionSLA.Target, durationType);
-    } else if (type === 'response') {
-      fetchResponseSLACompliance(customStartDate, customEndDate, responseSLA.Target, durationType);
-    }
-  };
+  // Use optional chaining to safely access MonthlyBreaches
+  const resolutionMonths = Object.keys(monthlyData.resolution_sla_compliance?.MonthlyBreaches || {});
+  const responseMonths = Object.keys(monthlyData.response_sla_compliance?.MonthlyBreaches || {});
 
   return (
     <div className="App">
@@ -133,105 +42,37 @@ function App() {
         <img src={logo} alt="SLA Validator" className="App-logo" />
         <h1>SLA Validator</h1>
       </header>
-      <form onSubmit={handleSubmit} className="sla-form">
 
-        <div className="form-group duration">
-          <label htmlFor="duration" className="input-label">Duration</label>
-          <select id="duration" name="duration" value={durationType} onChange={handleDurationChange}>
-            <option value="current_month">Current Month</option>
-            <option value="custom_date_range">Custom Date Range</option>
-          </select>
-        </div>
-        {durationType === 'custom_date_range' && (
-          <div className="custom-date">
-            <div className="form-group">
-              <label htmlFor="custom_start_date" className="input-label">Start Date</label>
-              <input
-                type="date"
-                id="custom_start_date"
-                name="custom_start_date"
-                value={customStartDate}
-                onChange={(e) => setCustomStartDate(e.target.value)}
-                required
-              />
-            </div>
-            <div className="form-group custom-end-date">
-              <label htmlFor="custom_end_date" className="input-label">End Date</label>
-              <input
-                type="date"
-                id="custom_end_date"
-                name="custom_end_date"
-                value={customEndDate}
-                onChange={(e) => setCustomEndDate(e.target.value)}
-                required
-              />
-            </div>
-          </div>
-        )}
-
-        <table>
-          <thead>
-            <tr>
-              <th>KPI</th>
-              <th>Target (%)</th>
-              <th>Check Threshold</th>
-              <th>Current Status</th>
-              <th>Criteria met?</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{resolutionSLA.KPI}</td>
-              <td>
-                <input
-                  type="number"
-                  value={resolutionSLA.Target}
-                  onChange={handleThresholdChange}
-                />
+      <table>
+        <thead>
+          <tr>
+            <th>KPI</th>
+            <th>Default Target (%)</th>
+            {/* Use the larger of the two arrays of months to ensure all months are covered */}
+            {resolutionMonths.length > responseMonths.length ? resolutionMonths : responseMonths.map(monthYear => <th key={monthYear}>{formatMonth(monthYear)}</th>)}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{monthlyData.resolution_sla_compliance?.KPI}</td>
+            <td>{monthlyData.resolution_sla_compliance?.DefaultTarget}</td>
+            {resolutionMonths.map(monthYear => (
+              <td key={monthYear}>
+                {monthlyData.resolution_sla_compliance?.MonthlyBreaches[monthYear]?.toFixed(2) ?? 'N/A'}%
               </td>
-              <td>
-                <button variant="contained" onClick={(e) => handleSubmit(e, 'resolution')} disabled={resolutionLoading}>
-                  {resolutionLoading ? (
-                    <>
-                      <span className="spinner"></span> {/* Spinner icon */}
-                      Loading...
-                    </>
-                  ) : (
-                    'Compute'
-                  )}
-                </button>
+            ))}
+          </tr>
+          <tr>
+            <td>{monthlyData.response_sla_compliance?.KPI}</td>
+            <td>{monthlyData.response_sla_compliance?.DefaultTarget}</td>
+            {responseMonths.map(monthYear => (
+              <td key={monthYear}>
+                {monthlyData.response_sla_compliance?.MonthlyBreaches[monthYear]?.toFixed(2) ?? 'N/A'}%
               </td>
-              <td>{resolutionSLA.CurrentStatus}</td>
-              <td className={resolutionSLA.CriteriaMet === 'Yes' ? 'yes' : 'no'}>{resolutionSLA.CriteriaMet}</td>
-            </tr>
-            <tr>
-              <td>{responseSLA.KPI}</td>
-              <td>
-                <input
-                  type="number"
-                  value={responseSLA.Target}
-                  onChange={handleResponseThresholdChange}
-                />
-              </td>
-              <td>
-              <button variant="contained" onClick={(e) => handleSubmit(e, 'response')} disabled={responseLoading}>
-                  {responseLoading ? (
-                    <>
-                      <span className="spinner"></span> {/* Spinner icon */}
-                      Loading...
-                    </>
-                  ) : (
-                    'Compute'
-                  )}
-                </button>
-              </td>
-              <td>{responseSLA.CurrentStatus}</td>
-              <td className={responseSLA.CriteriaMet === 'Yes' ? 'yes' : 'no'}>{responseSLA.CriteriaMet}</td>
-            </tr>
-          </tbody>
-        </table>
-      </form>
-      {/* {thresholdBreached && <div className="result">{thresholdBreached}</div>} */}
+            ))}
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 }
