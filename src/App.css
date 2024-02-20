@@ -34,3 +34,19 @@ tbody td {
   height: 80px;
   margin-bottom: 20px;
 }
+
+/* App.css */
+.percentage-red {
+  background-color: red;
+  color: white;
+}
+
+.percentage-yellow {
+  background-color: yellow;
+  color: black;
+}
+
+.percentage-green {
+  background-color: green;
+  color: white;
+}

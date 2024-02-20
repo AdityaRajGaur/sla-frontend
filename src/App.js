@@ -5,6 +5,8 @@ import './App.css';
 
 function App() {
   const [monthlyData, setMonthlyData] = useState(null); // Start with null
+  const RESOLUTION_WARNING_PERCENTAGE = 92; // Default value for resolution warning
+  const RESPONSE_WARNING_PERCENTAGE = 97; // Default value for response warning
 
   useEffect(() => {
     const fetchMonthlyData = async () => {
@@ -20,27 +22,35 @@ function App() {
     fetchMonthlyData();
   }, []);
 
-  // This function converts YYYY-MM to a more readable format, e.g., '2023-09' -> 'Sep 2023'
   const formatMonth = (monthYear) => {
     const [year, month] = monthYear.split('-');
     const date = new Date(year, month - 1);
     return date.toLocaleString('default', { month: 'short' }) + ' ' + year;
   };
 
-  // Wait for the data to be loaded before trying to access it
   if (!monthlyData) {
     return <p>Loading data...</p>;
   }
 
-  // Use optional chaining to safely access MonthlyBreaches
+  const getStyleForPercentage = (percentage, defaultTarget, warningPercentage) => {
+    if (percentage < defaultTarget) {
+      return { color: 'red' }; // Less than default target
+    } else if (percentage >=  defaultTarget & percentage < warningPercentage) {
+      return { color: 'orange' }; // Between default target and warning
+    } else {
+      return { color: 'green' }; // Greater than warning
+    }
+  };
+
   const resolutionMonths = Object.keys(monthlyData.resolution_sla_compliance?.MonthlyBreaches || {});
   const responseMonths = Object.keys(monthlyData.response_sla_compliance?.MonthlyBreaches || {});
+
 
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} alt="SLA Validator" className="App-logo" />
-        <h1>SLA Validator</h1>
+        <h1>P3 – Proactive Penalty Protection</h1>
       </header>
 
       <table>
@@ -53,11 +63,15 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          <tr>
+        <tr>
             <td>{monthlyData.resolution_sla_compliance?.KPI}</td>
             <td>{monthlyData.resolution_sla_compliance?.DefaultTarget}</td>
             {resolutionMonths.map(monthYear => (
-              <td key={monthYear}>
+              <td key={monthYear} style={getStyleForPercentage(
+                monthlyData.resolution_sla_compliance?.MonthlyBreaches[monthYear],
+                monthlyData.resolution_sla_compliance?.DefaultTarget,
+                RESOLUTION_WARNING_PERCENTAGE
+              )}>
                 {monthlyData.resolution_sla_compliance?.MonthlyBreaches[monthYear]?.toFixed(2) ?? 'N/A'}%
               </td>
             ))}
@@ -65,8 +79,12 @@ function App() {
           <tr>
             <td>{monthlyData.response_sla_compliance?.KPI}</td>
             <td>{monthlyData.response_sla_compliance?.DefaultTarget}</td>
-            {responseMonths.map(monthYear => (
-              <td key={monthYear}>
+            {resolutionMonths.map(monthYear => (
+              <td key={monthYear} style={getStyleForPercentage(
+                monthlyData.response_sla_compliance?.MonthlyBreaches[monthYear],
+                monthlyData.response_sla_compliance?.DefaultTarget,
+                RESPONSE_WARNING_PERCENTAGE
+              )}>
                 {monthlyData.response_sla_compliance?.MonthlyBreaches[monthYear]?.toFixed(2) ?? 'N/A'}%
               </td>
             ))}
