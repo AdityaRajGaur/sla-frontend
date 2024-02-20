@@ -42,8 +42,8 @@ function App() {
     }
   };
 
-  const resolutionMonths = Object.keys(monthlyData.resolution_sla_compliance?.MonthlyBreaches || {});
-  const responseMonths = Object.keys(monthlyData.response_sla_compliance?.MonthlyBreaches || {});
+  const resolutionMonths = Object.keys(monthlyData.resolution_sla_compliance?.MonthlyCompliance || {});
+  const responseMonths = Object.keys(monthlyData.response_sla_compliance?.MonthlyCompliance || {});
 
 
   return (
@@ -68,11 +68,11 @@ function App() {
             <td>{monthlyData.resolution_sla_compliance?.DefaultTarget}</td>
             {resolutionMonths.map(monthYear => (
               <td key={monthYear} style={getStyleForPercentage(
-                monthlyData.resolution_sla_compliance?.MonthlyBreaches[monthYear],
+                monthlyData.resolution_sla_compliance?.MonthlyCompliance[monthYear],
                 monthlyData.resolution_sla_compliance?.DefaultTarget,
                 RESOLUTION_WARNING_PERCENTAGE
               )}>
-                {monthlyData.resolution_sla_compliance?.MonthlyBreaches[monthYear]?.toFixed(2) ?? 'N/A'}%
+                {monthlyData.resolution_sla_compliance?.MonthlyCompliance[monthYear]?.toFixed(2) ?? 'N/A'}%
               </td>
             ))}
           </tr>
@@ -81,11 +81,11 @@ function App() {
             <td>{monthlyData.response_sla_compliance?.DefaultTarget}</td>
             {resolutionMonths.map(monthYear => (
               <td key={monthYear} style={getStyleForPercentage(
-                monthlyData.response_sla_compliance?.MonthlyBreaches[monthYear],
+                monthlyData.response_sla_compliance?.MonthlyCompliance[monthYear],
                 monthlyData.response_sla_compliance?.DefaultTarget,
                 RESPONSE_WARNING_PERCENTAGE
               )}>
-                {monthlyData.response_sla_compliance?.MonthlyBreaches[monthYear]?.toFixed(2) ?? 'N/A'}%
+                {monthlyData.response_sla_compliance?.MonthlyCompliance[monthYear]?.toFixed(2) ?? 'N/A'}%
               </td>
             ))}
           </tr>
