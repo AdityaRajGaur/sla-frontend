@@ -1,52 +1,125 @@
 /* App.css */
+
 .App {
   text-align: center;
   padding: 20px;
   font-family: 'Arial', sans-serif;
-  background-color: #f4f4f4;
+  background-color: ghostwhite;
 }
-/* Styles for the table */
-table {
-  width: 100%; /* Make the table full width */
-  margin-top: 20px;
-  border-collapse: collapse; /* Ensures that the border is collapsed into a single border */
-}
-th, td {
-  text-align: left;
-  padding: 8px; /* Adjust padding to ensure content is not too cramped */
-  border: 1px solid #ddd; /* Light grey border for the cells */
-  border-bottom: 2px solid #ccc; /* Slightly darker border for the bottom to distinguish header */
-}
-thead th {
-  background-color: #f0f0f0; /* Light grey background for headers */
-  font-weight: bold; /* Make the header fonts bold */
-}
-tbody td {
-  background-color: #ffffff; /* White background for table cells */
-}
+
 .App-header {
-  background-color: #282c34; /* Dark header background */
+  background-color: rgba(71, 215, 172, 0.36);
   padding: 20px;
   color: white;
+  position: relative;
 }
+
 
 .App-logo {
   height: 80px;
   margin-bottom: 20px;
 }
 
-/* App.css */
-.percentage-red {
-  background-color: red;
-  color: white;
+h1 {
+  color: #61dafb;
 }
 
-.percentage-yellow {
-  background-color: yellow;
-  color: black;
+.penaltyProtection {
+  font-family: 'Equip Extended', sans-serif;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 41.79px;
+  color: #06041F; 
+}
+
+.myButton {
+  background: #106BA3;
+  border-radius: 8px;
+}
+
+.tableHeader {
+  color:rgba(196, 200, 209, 0.17)
+}
+
+.tableRow{
+  font-family: 'Equip Extended', sans-serif;
+  font-weight: 500;
+  font-size:20px;
+  line-height: 35px;
+  letter-spacing:2%;
+  
+}
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.controls button, .controls select {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+
+.controls button {
+  background-color: rgba(196, 200, 209, 1);
+}
+
+.controls select {
+  background-color: #8ad2bd;
+}
+
+table {
+  width: 80%;
+  margin: 20px auto;
+  border-collapse: collapse;
+}
+
+th, td {
+  text-align: left;
+  padding: 12px;
+  border: 1px solid #ddd;
+}
+
+thead th {
+  background-color: rgba(196, 200, 209, 0.17);
+  color: #333;
+}
+
+tbody td {
+  background-color: rgba(196, 200, 209, 0.17);
+}
+
+.percentage-red {
+  color: #EF4A5F;
+}
+
+.percentage-orange {
+  color: #F09D2E;
 }
 
 .percentage-green {
-  background-color: green;
-  color: white;
+  color: #2F9E44;
 }
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .controls {
+    flex-direction: column;
+    align-items: center;
+  }
+
+ 
+
+  table {
+    width: 100%;
+  }
+}
+
+/* Add additional styles below as needed */
