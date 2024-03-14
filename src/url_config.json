@@ -1,7 +1,7 @@
 {
     "application_name": "jira service management",
     "backendURL": "http://localhost:8000/api/get_sla_compliance/",
-    "RESOLUTION_WARNING_PERCENTAGE": 92,
-    "RESPONSE_WARNING_PERCENTAGE": 97
+    "backendSettingsURL": "http://localhost:8000/api/update-internal-settings/"
+  
   }
   

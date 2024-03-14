@@ -1,19 +1,54 @@
 /* App.css */
 
 .App {
+  font-family: 'Arial', sans-serif;
+}
+
+.sub-app {
   text-align: center;
   padding: 20px;
-  font-family: 'Arial', sans-serif;
-  background-color: ghostwhite;
 }
 
 .App-header {
-  background-color: rgba(71, 215, 172, 0.36);
-  padding: 20px;
-  color: white;
+  align-items: center;
+  display: flex;
+  background: linear-gradient(180deg, rgba(71, 215, 172, 0.36) 0%, rgba(196, 200, 209, 0.24) 100%);
+  padding: 6px;
   position: relative;
+  font: bold;
+  font-size: 20px;
+  box-shadow: 0 0 10px 5px rgba(6, 4, 31, 0.1);
+  justify-content: space-between;
 }
 
+.logo-and-title {
+  display: flex;
+  align-items: center;
+}
+
+.dashboard-label {
+  margin-left: 10px;
+  /* Adjust as needed */
+  font-size: 20px;
+  /* Adjust as needed */
+  /* If you want to ensure it doesn't grow with flexbox, you might add */
+  flex-shrink: 0;
+}
+
+.settings-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  /* To ensure the button does not have margins */
+  margin: 0;
+  padding: 0;
+}
+
+.n-icon {
+  height: 50px;
+  margin-right: 10px;
+  position: relative;
+}
 
 .App-logo {
   height: 80px;
@@ -24,12 +59,29 @@ h1 {
   color: #61dafb;
 }
 
+/* .data-and-note-container {
+ 
+} */
+
+
+
+.color-indicator {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  font-size: 11px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+
 .penaltyProtection {
   font-family: 'Equip Extended', sans-serif;
   font-weight: 500;
-  font-size: 32px;
-  line-height: 41.79px;
-  color: #06041F; 
+  font-size: 22px;
+  margin: 5px 0px 15px 0px;
+  text-align: left;
+  color: #06041F;
 }
 
 .myButton {
@@ -38,53 +90,150 @@ h1 {
 }
 
 .tableHeader {
-  color:rgba(196, 200, 209, 0.17)
+  color: rgba(196, 200, 209, 0.17)
 }
 
-.tableRow{
+
+tr {
+  border: 2px solid white;
+}
+
+
+.color-code-note {
+  text-align: left;
+  font-size: 12px;
+  padding-left: 0;
+  margin-top: 0;
+  font-family: 'Equip Extended', sans-serif;
+
+}
+
+.tableRow {
   font-family: 'Equip Extended', sans-serif;
   font-weight: 500;
-  font-size:20px;
-  line-height: 35px;
-  letter-spacing:2%;
-  
-}
-.controls {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
+  letter-spacing: 2%;
+  min-width: 120px;
+
 }
 
-.controls button, .controls select {
+
+.controls button,
+.controls select {
   padding: 10px 15px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  color: white;
-  width: 100%;
-  margin-bottom: 10px;
+  background-color: rgba(196, 200, 209, 0.25);
+  height: 35px;
 }
 
+.controls button:last-child {
+  margin-right: 0;
+}
+
+.prev-button,
+.graph-icon,
+.next-button {
+  margin-right: 10px;
+}
+
+.graph-icon img {
+  width: 21px;
+  height: 21px;
+}
+
+
+.right-button {
+  margin-top: 10px;
+  float: right;
+}
+
+.graph-icon {
+  display: block;
+  width: auto;
+  height: 100%;
+  padding: 6px;
+  background-color: rgba(71, 215, 172, 1) !important;
+
+}
+
+button:disabled {
+  opacity: 0.8;
+  /* makes the button appear faded */
+  cursor: not-allowed;
+  /* changes the cursor to indicate it's not clickable */
+}
+
+.kpi-column {
+  width: 30%;
+  /* Set the width of the KPI column to 30% */
+}
+
+.settings-icon {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+
+}
+
+.settings-icon img {
+  width: 30px;
+}
+
+.settings-container {
+  margin-right: 15px;
+}
+
+/* setting a fixed width of table here */
+.data-container table th,
+.data-container table td {
+  /* width: 170px;
+  min-width: 120px;
+  max-width: 150px; */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* .left-section{
+
+
+} */
+
+.prev-button {
+  margin-right: 10px;
+}
 
 .controls button {
-  background-color: rgba(196, 200, 209, 1);
+  padding: 6px;
+  background-color: rgba(196, 200, 209, 0.25);
+
 }
 
-.controls select {
-  background-color: #8ad2bd;
+.controls {
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+  margin-bottom:25px;
+}
+
+.target {
+  color: #8ad2bd;
+  font-weight: bold;
 }
 
 table {
-  width: 80%;
-  margin: 20px auto;
+  table-layout: fixed;
+  width: 100%;
+  margin: 5px auto;
   border-collapse: collapse;
 }
 
-th, td {
+th,
+td {
   text-align: left;
   padding: 12px;
-  border: 1px solid #ddd;
 }
 
 thead th {
@@ -115,7 +264,7 @@ tbody td {
     align-items: center;
   }
 
- 
+
 
   table {
     width: 100%;
