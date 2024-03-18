@@ -20,6 +20,8 @@ function App() {
   const [currentMonthIndex, setCurrentMonthIndex] = useState(0); // Index to track current month
   const [showGraph, setShowGraph] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [graphStartIndex, setGraphStartIndex] = useState(0);
+  const [graphEndIndex, setGraphEndIndex] = useState(11); // start with the first 12 months
 
   // Dummy project list
   const projects = ['TIC', 'ES', 'Project 3'];
@@ -59,6 +61,7 @@ function App() {
     // Fetch data for the new project,yet to complete
   };
 
+  //navigation for table
   const navigateTimePeriod = (direction) => {
     if (direction === 'previous') {
       setCurrentMonthIndex((prevIndex) => prevIndex - 6);
@@ -66,6 +69,38 @@ function App() {
       setCurrentMonthIndex((prevIndex) => prevIndex + 6);
     }
   };
+
+  //const fullResolutionDataForGraph = sortDataByMonthForGraph(monthlyData.resolution_sla_compliance.MonthlyCompliance);
+  //const fullResponseDataForGraph = sortDataByMonthForGraph(monthlyData.response_sla_compliance.MonthlyCompliance);
+  // const fullChartData = convertDataToChartFormat(fullResolutionDataForGraph, fullResponseDataForGraph);
+
+
+  // Check if navigation is possible for the graph
+  const hasPreviousGraphData = () => graphStartIndex > 0;
+  const hasNextGraphData = () => graphEndIndex < fullChartData.length - 1;
+
+  const navigateGraphTimePeriod = (direction) => {
+    if (direction === 'previous') {
+      setGraphStartIndex((prevIndex) => Math.max(0, prevIndex - 12));
+      setGraphEndIndex((prevIndex) => Math.max(11, prevIndex - 12));
+    } else if (direction === 'next') {
+      setGraphStartIndex((prevIndex) => Math.min(fullChartData.length - 12, prevIndex + 12));
+      setGraphEndIndex((prevIndex) => Math.min(fullChartData.length - 1, prevIndex + 12));
+    }
+  };
+
+  const fullChartData = monthlyData ? convertDataToChartFormat(
+    sortDataByMonthForGraph(monthlyData?.resolution_sla_compliance?.MonthlyCompliance),
+    sortDataByMonthForGraph(monthlyData?.response_sla_compliance?.MonthlyCompliance)
+  ) : [];
+
+
+  // Slice the data for the graph based on the navigation index
+  const displayedGraphData = fullChartData.slice(graphStartIndex, graphEndIndex + 1);
+
+
+
+
   function convertDataToChartFormat(resolutionData, responseData) {
     // This is a placeholder function,need to replace it with real logic
     return resolutionData.map((item, index) => ({
@@ -108,17 +143,12 @@ function App() {
     actualTarget = parseFloat(actualTarget);
     internalTarget = parseFloat(internalTarget);
     //console.log(`Percentage: ${percentage}, Actual Target: ${actualTarget}, Internal Target: ${internalTarget}`);
-
     if (percentage < actualTarget) {
       return { color: 'red' };
     }
-
-    // Check if percentage is between the actual target and the internal target
     else if (percentage >= actualTarget && percentage < internalTarget) {
       return { color: 'orange' };
     }
-
-    // If none of the above, return green
     else {
       return { color: 'green' };
     }
@@ -160,24 +190,40 @@ function App() {
     );
   }
 
-
-
   // Slice the data to display only the current 6 months based on currentMonthIndex
   const slicedResolutionData = resolutionData.slice(currentMonthIndex, currentMonthIndex + 6);
   const slicedResponseData = responseData.slice(currentMonthIndex, currentMonthIndex + 6);
 
-  // preparing chart data
-  const chartData = convertDataToChartFormat(slicedResolutionData, slicedResponseData);
 
-  // const CustomLabel = (props) => {
-  //   const { x, y, stroke, value } = props;
 
-  //   return (
-  //     <text x={x} y={y - 10} dy={-4} fill={stroke} fontSize={10} textAnchor="middle">
-  //       {`${value.toFixed(2)}%`}
-  //     </text>
-  //   );
-  // };
+  // For Graph, consider the entire data set
+  //const fullResolutionData = resolutionData;
+  //const fullResponseData = responseData;
+
+
+  // Sort the data in ascending order for the graph
+  function sortDataByMonthForGraph(data) {
+    return Object.entries(data).sort(([monthYearA], [monthYearB]) => new Date(monthYearA) - new Date(monthYearB));
+  }
+  const CustomLabel = (props) => {
+    const { x, y, value, dataKey } = props;
+
+    let actualTarget;
+    if (dataKey === 'resolutionSLA') {
+      actualTarget = parseFloat(monthlyData.resolution_sla_compliance.actualResolutionTarget);
+    } else if (dataKey === 'responseSLA') {
+      actualTarget = parseFloat(monthlyData.response_sla_compliance.actualResponseTarget);
+    }
+
+    const style = getStyleForPercentage(value, actualTarget);
+    return (
+      <g>
+        <text x={x} y={y} dy={-4} fill={style.color} fontSize={15} textAnchor="middle">
+          {`${value}%`}
+        </text>
+      </g>
+    );
+  };
 
   return (
     <div className="App">
@@ -206,6 +252,7 @@ function App() {
         // Render the main dashboard view (graph or table) when showSettings is false
         <div className='sub-app'>
           <h1 className='penaltyProtection'>P3 – Proactive Penalty Protection</h1>
+
           <div className="controls">
             <div className='left-section'>
               <label>Project: </label>
@@ -217,78 +264,108 @@ function App() {
                 ))}
               </select>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <button className="graph-icon" onClick={handleGraphLayoutClick}>
-                <img src={showGraph ? tableIcon : graphIcon} alt={showGraph ? "Table Layout" : "Graph Layout"} />
-              </button>
-
-              <button
-                className="prev-button"
-                onClick={() => navigateTimePeriod('previous')}
-                disabled={!hasPreviousData()} // Disable button when there is no previous data
-              >
-                Next 6 Months &gt;
-              </button>
-              <button
-                className="next-button"
-                onClick={() => navigateTimePeriod('next')}
-                disabled={!hasNextData()} // Disable button when there is no next data
-              >
-                &lt; Previous 6 Months
-              </button>
-              {/* {hasPreviousData() && (
-              <button className="prev-button" onClick={() => navigateTimePeriod('previous')}>
-                Next 6 Months &gt;
-              </button>
-            )}
-            {hasNextData() && (
-              <button onClick={() => navigateTimePeriod('next')}>
-                &lt; Previous 6 Months
-              </button>
-            )} */}
+            <div className="graph-button-container">
+              {!showGraph && (
+                <>
+                  <button
+                    className="prev-button"
+                    onClick={() => navigateTimePeriod('previous')}
+                    disabled={!hasPreviousData()}
+                  >
+                    &lt; Previous 6 Months
+                  </button>
+                  <button
+                    className="next-button"
+                    onClick={() => navigateTimePeriod('next')}
+                    disabled={!hasNextData()}
+                  >
+                    Next 6 Months &gt;
+                  </button>
+                </>
+              )}
             </div>
+
+            {/* The graph button is always rendered but its function changes */}
+            <button className="graph-icon" onClick={handleGraphLayoutClick}>
+              <img src={showGraph ? tableIcon : graphIcon} alt={showGraph ? "Table Layout" : "Graph Layout"} />
+            </button>
+
           </div>
 
           {selectedProject === 'TIC' ? (
             showGraph ? (
-              <ResponsiveContainer width="100%" height={350}>
-                <LineChart
-                  data={chartData}
-                  margin={{
-                    top: 20,
-                    right: 30,
-                    left: 20,
-                    bottom: 5,
-                  }}
-                >
-                  <CartesianGrid
-                    strokeDasharray="3 3"
-                    stroke="transparent" // Hide vertical lines
-                    fill="rgba(196, 200, 209, 0.24)"
-                  />
-                  <XAxis dataKey="monthYear" tickFormatter={formatMonthYear} />
-                  <YAxis domain={['auto', 'auto']} padding={{ top: 20 }} />
-                  <Tooltip />
-                  <Legend />
-                  <ReferenceLine
-                    y={parseFloat(monthlyData.resolution_sla_compliance.internalResolutionTarget)}
-                    stroke="#8884d8"
-                    strokeDasharray="3 3"
-                  />
-                  <ReferenceLine
-                    y={parseFloat(monthlyData.response_sla_compliance.internalResponseTarget)}
-                    stroke="#82ca9d"
-                    strokeDasharray="3 3"
-                  />
-                  <Line type="monotone" dataKey="resolutionSLA" stroke="#8884d8" activeDot={{ r: 8 }} >
-                    <LabelList dataKey="resolutionSLA" position="top" style={{ fill: 'blue' }} formatter={(value) => `${value}%`} />
-                    {/* <LabelList content={<CustomLabel />} /> */}
-                  </Line>
-                  <Line type="monotone" dataKey="responseSLA" stroke="#82ca9d" >
-                    <LabelList dataKey="responseSLA" position="top" style={{ fill: 'green' }} formatter={(value) => `${value}%`} />
-                  </Line>
-                </LineChart>
-              </ResponsiveContainer>
+              <>
+                <div>
+                  <div>
+                    <ResponsiveContainer width="100%" height={300}>
+                      <LineChart
+                        data={displayedGraphData}
+                        margin={{
+                          top: 20,
+                          right: 30,
+                          left: 20,
+                          bottom: 5,
+                        }}
+                      >
+                        <CartesianGrid
+                          strokeDasharray="3 3"
+                          stroke="transparent" // Hide vertical lines
+                          fill="rgba(196, 200, 209, 0.24)"
+                        />
+                        <XAxis dataKey="monthYear" tickFormatter={formatMonthYear} interval={0} className="custom-x-axis" />
+                        <YAxis domain={['auto', 'auto']} padding={{ top: 20 }} />
+                        <Tooltip />
+                        {/* <Legend /> */}
+                        <ReferenceLine
+                          y={parseFloat(monthlyData.resolution_sla_compliance.internalResolutionTarget)}
+                          stroke="#8884d8"
+                          strokeDasharray="3 3"
+                        />
+                        <ReferenceLine
+                          y={parseFloat(monthlyData.response_sla_compliance.internalResponseTarget)}
+                          stroke="#82ca9d"
+                          strokeDasharray="3 3"
+                        />
+                        <Line type="monotone" dataKey="resolutionSLA" stroke="#8884d8" activeDot={{ r: 8 }} >
+                          {/* <LabelList dataKey="resolutionSLA" position="top" style={{ fill: 'blue' }} formatter={(value) => `${value}%`} /> */}
+                          <LabelList content={<CustomLabel dataKey="resolutionSLA" />} />
+                        </Line>
+                        <Line type="monotone" dataKey="responseSLA" stroke="#82ca9d" >
+                          {/* <LabelList dataKey="responseSLA" position="top" style={{ fill: 'green' }} formatter={(value) => `${value}%`} /> */}
+                          <LabelList content={<CustomLabel dataKey="responseSLA" />} />
+                        </Line>
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+                <div className="sla-details-container">
+                  <div className="sla-detail">
+                    <span className="sla-color-box resolution"></span>
+                    Resolution SLA Compliance: {monthlyData.resolution_sla_compliance.actualResolutionTarget}%
+                  </div>
+                  <div className="sla-detail">
+                    <span className="sla-color-box response"></span>
+                    Response SLA Compliance: {monthlyData.response_sla_compliance.actualResponseTarget}%
+                  </div>
+                </div>
+                <div className="navigation-buttons">
+                  <button
+                    className="prev-button"
+                    onClick={() => navigateGraphTimePeriod('previous')}
+                    disabled={!hasPreviousGraphData()}
+                  >
+                    &lt; Previous
+                  </button>
+                  <button
+                    className="next-button"
+                    onClick={() => navigateGraphTimePeriod('next')}
+                    disabled={!hasNextGraphData()}
+                  >
+                    Next &gt;
+                  </button>
+                </div>
+
+              </>
             ) : (
               <div className="data-and-note-container">
                 <div className="data-container">
@@ -345,6 +422,7 @@ function App() {
             <p>No data available for the selected project</p>
           )}
         </div>
+
       )}
     </div>
   );

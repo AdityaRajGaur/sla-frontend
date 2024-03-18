@@ -35,6 +35,10 @@
   flex-shrink: 0;
 }
 
+.graph-button-container {
+  margin-left: auto;
+}
+
 .settings-icon {
   background: none;
   border: none;
@@ -93,11 +97,9 @@ h1 {
   color: rgba(196, 200, 209, 0.17)
 }
 
-
 tr {
   border: 2px solid white;
 }
-
 
 .color-code-note {
   text-align: left;
@@ -105,7 +107,6 @@ tr {
   padding-left: 0;
   margin-top: 0;
   font-family: 'Equip Extended', sans-serif;
-
 }
 
 .tableRow {
@@ -113,9 +114,7 @@ tr {
   font-weight: 500;
   letter-spacing: 2%;
   min-width: 120px;
-
 }
-
 
 .controls button,
 .controls select {
@@ -128,7 +127,7 @@ tr {
 }
 
 .controls button:last-child {
-  margin-right: 0;
+  margin-right: 10px;
 }
 
 .prev-button,
@@ -153,20 +152,34 @@ tr {
   width: auto;
   height: 100%;
   padding: 6px;
+  margin-right:0;
   background-color: rgba(71, 215, 172, 1) !important;
 
 }
 
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between; 
+  padding: 0 5px; 
+  margin-top: 10px; 
+}
+.navigation-buttons .prev-button,
+.navigation-buttons .next-button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: rgba(196, 200, 209, 0.25);
+  
+}
+
 button:disabled {
   opacity: 0.8;
-  /* makes the button appear faded */
   cursor: not-allowed;
-  /* changes the cursor to indicate it's not clickable */
 }
 
 .kpi-column {
   width: 30%;
-  /* Set the width of the KPI column to 30% */
 }
 
 .settings-icon {
@@ -184,38 +197,41 @@ button:disabled {
 .settings-container {
   margin-right: 15px;
 }
+.graph-button-container {
+  display: flex;
+  align-items: center; /* This will vertically align buttons if they have different heights */
+  justify-content: flex-end; /* This will align the buttons to the right */
+  flex-grow: 1;
+}
 
-/* setting a fixed width of table here */
 .data-container table th,
 .data-container table td {
-  /* width: 170px;
-  min-width: 120px;
-  max-width: 150px; */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 /* .left-section{
-
-
 } */
 
-.prev-button {
-  margin-right: 10px;
-}
 
 .controls button {
   padding: 6px;
   background-color: rgba(196, 200, 209, 0.25);
-
 }
 
+.custom-x-axis {
+  font-weight: bold; 
+  color: #333;
+}
 .controls {
   justify-content: space-between;
   align-items: center;
   display: flex;
   margin-bottom:25px;
+}
+.controls .graph-icon {
+  margin-left: auto; 
 }
 
 .target {
@@ -264,11 +280,32 @@ tbody td {
     align-items: center;
   }
 
-
-
   table {
     width: 100%;
   }
 }
+.sla-details-container {
+  display: flex;
+  justify-content: space-around;
+}
 
-/* Add additional styles below as needed */
+.sla-detail {
+  display: flex;
+  align-items: center;
+}
+
+.sla-color-box {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  display: inline-block;
+}
+
+.sla-color-box.resolution {
+  background: rgb(136, 132, 216); 
+}
+
+.sla-color-box.response {
+  background: rgb(130, 202, 157); 
+}
+
