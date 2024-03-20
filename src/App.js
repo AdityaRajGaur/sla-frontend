@@ -3,7 +3,7 @@ import axios from 'axios';
 // import logo from './sla-validator-logo.png';
 import nagarroIcon from './nag-icon.svg';
 import graphIcon from './graph-img.svg';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, LabelList, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, LabelList, ResponsiveContainer, ReferenceLine } from 'recharts';
 import './App.css';
 import urlConfig from './url_config.json';
 import SettingsForm from './SettingsForm';
