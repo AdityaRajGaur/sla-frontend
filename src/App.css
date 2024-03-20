@@ -83,7 +83,7 @@ h1 {
   font-family: 'Equip Extended', sans-serif;
   font-weight: 500;
   font-size: 22px;
-  margin: 5px 0px 15px 0px;
+  margin: 5px 0px 10px 0px;
   text-align: left;
   color: #06041F;
 }
@@ -105,7 +105,7 @@ tr {
   text-align: left;
   font-size: 12px;
   padding-left: 0;
-  margin-top: 0;
+  margin-top: 5px;
   font-family: 'Equip Extended', sans-serif;
 }
 
@@ -161,7 +161,7 @@ tr {
   display: flex;
   justify-content: space-between; 
   padding: 0 5px; 
-  margin-top: 10px; 
+  margin-top: 5px; 
 }
 .navigation-buttons .prev-button,
 .navigation-buttons .next-button {
@@ -221,14 +221,14 @@ button:disabled {
 }
 
 .custom-x-axis {
-  font-weight: bold; 
   color: #333;
+  font-size:small;
 }
 .controls {
   justify-content: space-between;
   align-items: center;
   display: flex;
-  margin-bottom:25px;
+  margin-bottom:5px;
 }
 .controls .graph-icon {
   margin-left: auto; 
@@ -287,6 +287,12 @@ tbody td {
 .sla-details-container {
   display: flex;
   justify-content: space-around;
+  font-size: 12px;
+  margin-top:5px;
+}
+.sla-color-box.resolution{
+  width:15px;
+  height:15px;
 }
 
 .sla-detail {

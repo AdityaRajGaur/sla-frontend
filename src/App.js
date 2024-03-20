@@ -238,9 +238,9 @@ function App() {
             <img src={SettingsIcon} alt="Settings" />
           </button>
         </div>
-      </header>
+        </header>
 
-      {showSettings ? (
+        {showSettings ? (
         // Render the settings form when showSettings is true
         <SettingsForm
           onSaveSettings={saveSettingsToBackend}
@@ -248,7 +248,7 @@ function App() {
           selectedProject={selectedProject} // Pass the selected project as a prop
         />
 
-      ) : (
+        ) : (
         // Render the main dashboard view (graph or table) when showSettings is false
         <div className='sub-app'>
           <h1 className='penaltyProtection'>P3 – Proactive Penalty Protection</h1>
@@ -264,6 +264,7 @@ function App() {
                 ))}
               </select>
             </div>
+            
             <div className="graph-button-container">
               {!showGraph && (
                 <>
@@ -297,12 +298,12 @@ function App() {
               <>
                 <div>
                   <div>
-                    <ResponsiveContainer width="100%" height={300}>
+                    <ResponsiveContainer width="100%" height={290} style={{ backgroundColor: 'rgba(196, 200, 209, 0.17)' }}>
                       <LineChart
                         data={displayedGraphData}
                         margin={{
                           top: 20,
-                          right: 30,
+                          right: 50,
                           left: 20,
                           bottom: 5,
                         }}
@@ -312,25 +313,31 @@ function App() {
                           stroke="transparent" // Hide vertical lines
                           fill="rgba(196, 200, 209, 0.24)"
                         />
-                        <XAxis dataKey="monthYear" tickFormatter={formatMonthYear} interval={0} className="custom-x-axis" />
+                        <XAxis dataKey="monthYear" 
+                        tickFormatter={formatMonthYear} 
+                        interval={0} 
+                        padding={{ left: 30 ,right:30}} 
+                        className="custom-x-axis" />
                         <YAxis domain={['auto', 'auto']} padding={{ top: 20 }} />
-                        <Tooltip />
+                        {/* <Tooltip /> */}
                         {/* <Legend /> */}
                         <ReferenceLine
-                          y={parseFloat(monthlyData.resolution_sla_compliance.internalResolutionTarget)}
+                          y={parseFloat(monthlyData.resolution_sla_compliance.actualResolutionTarget)}
+                          label={{ value: `${monthlyData.resolution_sla_compliance.actualResolutionTarget}%`, position: 'right' }}
                           stroke="#8884d8"
                           strokeDasharray="3 3"
                         />
                         <ReferenceLine
-                          y={parseFloat(monthlyData.response_sla_compliance.internalResponseTarget)}
+                          y={parseFloat(monthlyData.response_sla_compliance.actualResponseTarget)}
+                          label={{ value: `${monthlyData.response_sla_compliance.actualResponseTarget}%`, position: 'right' }}
                           stroke="#82ca9d"
                           strokeDasharray="3 3"
                         />
-                        <Line type="monotone" dataKey="resolutionSLA" stroke="#8884d8" activeDot={{ r: 8 }} >
+                        <Line type="linear" dataKey="resolutionSLA" stroke="#8884d8" activeDot={{ r: 8 }} >
                           {/* <LabelList dataKey="resolutionSLA" position="top" style={{ fill: 'blue' }} formatter={(value) => `${value}%`} /> */}
                           <LabelList content={<CustomLabel dataKey="resolutionSLA" />} />
                         </Line>
-                        <Line type="monotone" dataKey="responseSLA" stroke="#82ca9d" >
+                        <Line type="linear" dataKey="responseSLA" stroke="#82ca9d" >
                           {/* <LabelList dataKey="responseSLA" position="top" style={{ fill: 'green' }} formatter={(value) => `${value}%`} /> */}
                           <LabelList content={<CustomLabel dataKey="responseSLA" />} />
                         </Line>
@@ -364,7 +371,7 @@ function App() {
                     Next &gt;
                   </button>
                 </div>
-
+                <ColorCodeNote />
               </>
             ) : (
               <div className="data-and-note-container">
