@@ -20,7 +20,7 @@
     "eject": "react-scripts eject"
   },
  
-"proxy": "https://slaprotection-backend.azurewebsites.net",
+
   "eslintConfig": {
     "extends": [
       "react-app",
