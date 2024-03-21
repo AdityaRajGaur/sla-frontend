@@ -1,7 +1,7 @@
-{
+
+  {
     "application_name": "jira service management",
-    "backendURL": "http://localhost:8000/api/get_sla_compliance/",
-    "backendSettingsURL": "http://localhost:8000/api/update-internal-settings/"
-  
+    "backendURL": "https://slaprotection-backend.azurewebsites.net/api/get_sla_compliance/",
+    "backendSettingsURL": "https://slaprotection-backend.azurewebsites.net/api/update-internal-settings/"
   }
   
